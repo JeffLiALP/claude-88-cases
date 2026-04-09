@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Claude 88 個使用案例</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #f7f6f2; --surface: #ffffff; --surface2: #f0ede6; --border: #e2ddd4;
+    --text: #1a1814; --text-muted: #7a7570; --text-hint: #b0aca5;
+    --teal: #0f6e56; --teal-light: #e1f5ee; --teal-mid: #1d9e75;
+    --blue: #185fa5; --blue-light: #e6f1fb; --amber: #854f0b; --amber-light: #faeeda;
+    --accent: #c84b2f;
+  }
+  body { font-family: 'Noto Sans TC', sans-serif; background: var(--bg); color: var(--text); }
+  .hero { background: var(--text); color: #f7f6f2; padding: 3.5rem 2rem 3rem; position: relative; overflow: hidden; }
+  .hero::before { content: ''; position: absolute; top: -80px; right: -80px; width: 380px; height: 380px; border-radius: 50%; background: rgba(196,75,47,0.1); pointer-events: none; }
+  .hero-inner { max-width: 940px; margin: 0 auto; position: relative; }
+  .hero-label { font-family: 'Space Grotesk', sans-serif; font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--teal-mid); margin-bottom: 1rem; }
+  .hero h1 { font-size: clamp(2rem, 5vw, 3.2rem); font-weight: 700; line-height: 1.15; margin-bottom: 1rem; }
+  .hero h1 span { color: var(--accent); }
+  .hero-sub { font-size: 15px; color: rgba(247,246,242,0.6); max-width: 520px; line-height: 1.7; margin-bottom: 2rem; }
+  .hero-stats { display: flex; gap: 2rem; flex-wrap: wrap; }
+  .hero-stat .num { font-family: 'Space Grotesk', sans-serif; font-size: 2rem; font-weight: 600; color: #fff; line-height: 1; }
+  .hero-stat .lbl { font-size: 12px; color: rgba(247,246,242,0.5); margin-top: 3px; }
+  .main { max-width: 940px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+  .search-wrap { position: relative; margin-bottom: 1.5rem; }
+  .search-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-hint); font-size: 15px; pointer-events: none; }
+  #search { width: 100%; padding: 11px 14px 11px 40px; font-size: 14px; font-family: 'Noto Sans TC', sans-serif; border: 1.5px solid var(--border); border-radius: 10px; background: var(--surface); color: var(--text); outline: none; transition: border-color 0.2s; }
+  #search:focus { border-color: var(--teal-mid); }
+  #search::placeholder { color: var(--text-hint); }
+  .filter-section { margin-bottom: 1.5rem; }
+  .filter-label { font-size: 11px; font-family: 'Space Grotesk', sans-serif; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-hint); margin-bottom: 8px; }
+  .filter-row { display: flex; flex-wrap: wrap; gap: 6px; }
+  .btn { font-size: 12.5px; font-family: 'Noto Sans TC', sans-serif; padding: 5px 13px; border-radius: 20px; border: 1.5px solid var(--border); background: var(--surface); color: var(--text-muted); cursor: pointer; transition: all 0.15s; line-height: 1.5; }
+  .btn:hover { border-color: var(--text-muted); color: var(--text); }
+  .btn.active-cat { background: var(--text); color: #fff; border-color: var(--text); }
+  .btn.active-入門 { background: var(--teal-light); color: var(--teal); border-color: #5dcaa5; }
+  .btn.active-進階 { background: var(--blue-light); color: var(--blue); border-color: #85b7eb; }
+  .btn.active-專業 { background: var(--amber-light); color: var(--amber); border-color: #ef9f27; }
+  .result-count { font-size: 13px; color: var(--text-hint); margin-bottom: 1rem; font-family: 'Space Grotesk', sans-serif; }
+  .result-count strong { color: var(--text); font-weight: 600; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; }
+  .card { background: var(--surface); border: 1.5px solid var(--border); border-radius: 14px; overflow: hidden; transition: border-color 0.15s, box-shadow 0.15s; }
+  .card:hover { border-color: #c0bbb4; box-shadow: 0 4px 20px rgba(26,24,20,0.08); }
+  .card-body { padding: 1rem 1.1rem 0.75rem; }
+  .card-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; margin-bottom: 7px; }
+  .card-title { font-size: 14px; font-weight: 500; line-height: 1.45; color: var(--text); flex: 1; }
+  .card-num { font-family: 'Space Grotesk', sans-serif; font-size: 11px; color: var(--text-hint); flex-shrink: 0; margin-top: 2px; }
+  .card-desc { font-size: 12.5px; color: var(--text-muted); line-height: 1.6; margin-bottom: 10px; }
+  .card-footer { display: flex; gap: 6px; flex-wrap: wrap; padding-bottom: 0.75rem; }
+  .badge { font-size: 11px; padding: 2px 9px; border-radius: 20px; font-family: 'Space Grotesk', sans-serif; }
+  .badge-cat { background: var(--surface2); color: var(--text-muted); border: 1px solid var(--border); }
+  .badge-入門 { background: var(--teal-light); color: var(--teal); }
+  .badge-進階 { background: var(--blue-light); color: var(--blue); }
+  .badge-專業 { background: var(--amber-light); color: var(--amber); }
+  .card-toggle { width: 100%; padding: 7px 1.1rem; border: none; border-top: 1px solid var(--border); background: var(--surface2); font-size: 12px; color: var(--text-muted); cursor: pointer; text-align: left; font-family: 'Noto Sans TC', sans-serif; display: flex; align-items: center; gap: 5px; transition: background 0.15s; }
+  .card-toggle:hover { background: #e8e4dc; }
+  .card-toggle .arrow { transition: transform 0.2s; }
+  .card-toggle.open .arrow { transform: rotate(180deg); }
+  .card-details { display: none; border-top: 1px solid var(--border); }
+  .card-details.open { display: block; }
+  .detail-section { padding: 0.875rem 1.1rem; border-bottom: 1px solid var(--border); }
+  .detail-section:last-child { border-bottom: none; }
+  .detail-label { font-size: 10.5px; font-family: 'Space Grotesk', sans-serif; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-hint); margin-bottom: 6px; }
+  .detail-text { font-size: 12.5px; color: var(--text-muted); line-height: 1.65; }
+  .prompt-block { background: #1a1814; border-radius: 8px; padding: 0.75rem 1rem; position: relative; }
+  .prompt-text { font-size: 13px; color: #e8e4dc; line-height: 1.6; font-family: 'Noto Sans TC', sans-serif; padding-right: 52px; }
+  .copy-btn { position: absolute; top: 8px; right: 8px; background: rgba(255,255,255,0.1); border: none; border-radius: 5px; color: rgba(232,228,220,0.7); font-size: 11px; padding: 3px 8px; cursor: pointer; font-family: 'Space Grotesk', sans-serif; transition: background 0.15s; }
+  .copy-btn:hover { background: rgba(255,255,255,0.18); color: #e8e4dc; }
+  .copy-btn.copied { color: #1d9e75; }
+  .empty { text-align: center; padding: 4rem 1rem; color: var(--text-hint); font-size: 14px; }
+  footer { text-align: center; padding: 2rem 1rem; font-size: 12px; color: var(--text-hint); border-top: 1px solid var(--border); }
+  @media (max-width: 600px) { .hero { padding: 2.5rem 1.25rem 2rem; } .hero-stats { gap: 1.5rem; } .grid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-label">ALP × Claude 應用指南</div>
+    <h1>Claude <span>88</span> 個使用案例</h1>
+    <p class="hero-sub">涵蓋非營利組織、教育、法律、財務、行銷等領域的 Claude 實用情境，附台灣在地範例與可直接貼入的提示詞。</p>
+    <div class="hero-stats">
+      <div class="hero-stat"><div class="num">88</div><div class="lbl">案例總數</div></div>
+      <div class="hero-stat"><div class="num">13</div><div class="lbl">應用類別</div></div>
+      <div class="hero-stat"><div class="num">36</div><div class="lbl">入門</div></div>
+      <div class="hero-stat"><div class="num">40</div><div class="lbl">進階</div></div>
+      <div class="hero-stat"><div class="num">12</div><div class="lbl">專業</div></div>
+    </div>
+  </div>
+</div>
+<div class="main">
+  <div class="search-wrap">
+    <span class="search-icon">🔍</span>
+    <input type="text" id="search" placeholder="搜尋案例標題、說明或提示詞…" oninput="render()">
+  </div>
+  <div class="filter-section">
+    <div class="filter-label">類別</div>
+    <div class="filter-row" id="cat-filters"></div>
+  </div>
+  <div class="filter-section">
+    <div class="filter-label">難度</div>
+    <div class="filter-row" id="diff-filters"></div>
+  </div>
+  <div class="result-count" id="count"></div>
+  <div class="grid" id="grid"></div>
+</div>
+<footer>整理自 Claude 88 個案例分享版 · 點選卡片下方按鈕展開可查看提示詞與台灣案例</footer>
+<script>
+const data = [{"n": "1", "t": "視覺化募款目標金字塔", "d": "輸入募款目標，Claude 即時畫出捐款金字塔：從大額到小額，每層需要多少筆、多少潛在捐款人。", "occ": "非營利組織；募款人員", "cat": "非營利組織", "diff": "入門", "tw": "台灣基金會常辦年度勸募活動，可用此功能拆解公益勸募目標：大額企業捐款（如台積電基金會）、中額定期定額、小額超商零錢捐的金字塔結構。", "p": "當我在規劃募款活動時，幫我用視覺化金字塔分析每個捐款層級需要的捐款人數量。"}, {"n": "2", "t": "預算情境並排比較", "d": "輸入預算分配和變動因素，Claude 畫出三種情境並排比較，可切換金額和百分比。", "occ": "非營利組織；財務人員", "cat": "非營利組織", "diff": "入門", "tw": "台灣 NPO 常需向文化部、教育部或衛福部申請補助，可用三種情境比較不同補助核定率下的年度預算配置。", "p": "當我需要比較不同預算方案時，幫我建立可互動的情境對照圖。"}, {"n": "3", "t": "捐款人留存 vs 獲取模擬", "d": "Claude 建立五年捐款預測，附留存率和獲取率滑桿，拖動即時重繪曲線。", "occ": "非營利組織；募款人員", "cat": "非營利組織", "diff": "入門", "tw": "台灣的捐款文化偏向年末和天災時的一次性捐款，用此工具模擬「定期定額留存率提升 5%」vs「每年開發新捐款人」的五年收入差異。", "p": "當我在評估募款策略時，幫我建立留存率與獲取率的互動模擬圖。"}, {"n": "4", "t": "理論變革因果鏈視覺化", "d": "描述你的計畫，Claude 畫出因果鏈：從投入到影響，每個箭頭可點擊查看背後假設。", "occ": "非營利組織；專案經理", "cat": "非營利組織", "diff": "進階", "tw": "台灣社福機構申請聯合勸募或公益彩券補助時，需提交邏輯模型（Logic Model），此工具可快速產出因果鏈圖。", "p": "當我在設計社會影響方案時，幫我畫出因果鏈圖並標出假設薄弱的環節。"}, {"n": "5", "t": "課程大綱彈性分析", "d": "上傳課綱，Claude 標出哪些週次有先備知識鎖定，哪些可以自由調整。", "occ": "教育工作者；講師", "cat": "教育", "diff": "入門", "tw": "台灣大學教授規劃 108 課綱對應的課程時，可標記哪些週次有先備知識鎖定（如微積分先修）、哪些可配合國定假日彈性調整。", "p": "當我在安排課程進度時，幫我分析哪些單元有先後順序限制，哪些可以彈性調整。"}, {"n": "6", "t": "研究補助方案比較", "d": "Claude 把所有資助來源畫在一張圖上：機率、金額、截止日、工作量，你篩選、測試、一起縮小範圍。", "occ": "研究人員；教育工作者", "cat": "教育", "diff": "進階", "tw": "台灣研究者常需比較國科會專題計畫、教育部計畫、科技部產學合作等不同補助，此工具可視覺化比較金額、通過率與申請截止日。", "p": "當我在尋找研究補助時，幫我把所有選項畫成可篩選的比較圖。"}, {"n": "7", "t": "邊學邊操作公式", "d": "Claude 在對話中建立空白散佈圖，你放點、拖動、觀察擬合變化。", "occ": "學生；教育工作者", "cat": "教育", "diff": "入門", "tw": "台灣的大學統計課或補習班數學課上，學生可邊聽講邊在 Claude 中操作公式，用互動散佈圖理解迴歸分析。", "p": "當我在學習統計或數學公式時，幫我建立可互動操作的視覺化練習。"}, {"n": "8", "t": "文獻回顧論點地圖", "d": "Claude 讀你的論文堆，畫出論點結構：依主張分群、標出陣營分歧線、每群的盲點。", "occ": "研究人員；學生", "cat": "教育", "diff": "進階", "tw": "台灣碩博士生撰寫 TSSCI 或 SCI 期刊論文的文獻回顧時，可用論點地圖整理學派分歧與研究缺口。", "p": "當我在做文獻回顧時，幫我畫出各論文的論點分布圖和分歧線。"}, {"n": "9", "t": "資料探索相關矩陣", "d": "上傳 CSV，Claude 即時建立相關矩陣，標出值得深究的模式。", "occ": "研究人員；學生；數據分析師", "cat": "教育", "diff": "入門", "tw": "台灣的大學生或研究助理在做國科會計畫的資料分析時，可快速上傳 CSV 產出相關矩陣，找出值得深究的變數關係。", "p": "當我上傳資料集時，先幫我畫相關矩陣，標出值得深入的模式。"}, {"n": "10", "t": "白板教學互動化", "d": "和 Claude 一起設計教學概念，視覺化圖示在對話中即時生成。", "occ": "教育工作者；講師", "cat": "教育", "diff": "入門", "tw": "台灣高中老師準備探究與實作課程時，可把白板上的概念圖轉成互動式教學視覺化，讓學生在課堂上操作。", "p": "當我在備課時，幫我把教學概念轉成互動式視覺化圖示。"}, {"n": "11", "t": "機制原理互動圖", "d": "Claude 在對話中建立互動視覺化，依你的具體問題設計，附可操作的控制項。", "occ": "學生；教育工作者；一般用戶", "cat": "教育", "diff": "入門", "tw": "台灣的自然科老師解釋物理或化學機制時，可用互動圖讓學生拖動參數觀察變化，取代傳統靜態投影片。", "p": "當我在理解某個原理或機制時，幫我建立可操作的互動式解說圖。"}, {"n": "12", "t": "製作品牌素材", "d": "產出符合品牌規範的名片、傳單、行銷素材，可直接列印或編輯。", "occ": "行銷人員；設計師；創業者", "cat": "專業工作", "diff": "入門", "tw": "台灣中小企業常需快速產出名片、DM 傳單或 LINE 官方帳號的圖文素材，可用此功能自動套用品牌色和 Logo。", "p": "當我需要製作品牌素材時，根據我的品牌規範產出名片、傳單等設計稿。"}, {"n": "13", "t": "建立個人網頁", "d": "建立作品集網站展示你的作品，學習如何部署上線，不需要寫程式。", "occ": "創業者；自由工作者；一般用戶", "cat": "個人", "diff": "入門", "tw": "台灣的自由工作者或設計師可用此功能建立個人作品集網站，部署到 GitHub Pages 或 Vercel，免費上線。", "p": "當我想建立個人網頁或作品集時，幫我產出完整的網頁程式碼並指導部署。"}, {"n": "14", "t": "合約紅線標記與談判", "d": "分析合約找出影響你權益的條款，提供修改建議和談判要點。", "occ": "法律專業；創業者；經理人", "cat": "法律", "diff": "專業", "tw": "台灣企業常需審閱 NDA、經銷合約或技術授權合約，此工具可標記不利條款並建議符合台灣民法的修改方向。", "p": "當我收到合約需要審閱時，幫我標出風險條款並建議修改方向和談判策略。"}, {"n": "15", "t": "用 Skills 提升 Claude 設計品質", "d": "設計一個 Skill，讓 Claude 自動套用設計原則到輸出內容。", "occ": "進階用戶；開發者", "cat": "個人", "diff": "專業", "tw": "台灣的設計師或行銷人員可建立一個 Skill，讓 Claude 自動套用公司品牌手冊的色碼、字體和語氣規範。", "p": "當我想讓 Claude 的輸出自動符合特定設計原則時，幫我寫一個可重複使用的 Skill。"}, {"n": "16", "t": "跨平台內容改寫", "d": "把一篇內容轉成多種格式，適配不同平台和受眾。", "occ": "行銷人員；內容創作者；社群小編", "cat": "行銷", "diff": "入門", "tw": "台灣行銷團隊需要把一篇部落格文章改寫成 LINE 官方帳號推播、FB 粉專貼文、IG 限動文案和蝦皮商品描述。", "p": "當我完成一篇內容後，幫我改寫成適合 FB、IG、LinkedIn、電子報等不同平台的版本。"}, {"n": "17", "t": "分析行銷活動成效", "d": "分析行銷數據找出最佳和最差管道，給出具體的預算重新分配建議。", "occ": "行銷人員；數據分析師", "cat": "行銷", "diff": "進階", "tw": "台灣的數位行銷團隊可分析 Google Ads 台灣、Facebook 粉專和 LINE 官方帳號的成效數據，找出 ROAS 最高的管道。", "p": "當我有行銷活動數據時，幫我分析各管道表現並建議預算如何重新分配。"}, {"n": "18", "t": "分析募款活動成效", "d": "分析各管道表現：email、活動、實體信件、社群，找出最高回報的投資。", "occ": "非營利組織；募款人員", "cat": "非營利組織", "diff": "進階", "tw": "台灣基金會可用此工具分析年度勸募活動各管道表現：實體郵件勸募函、email 募款信、LINE 推播、公益園遊會的回報率比較。", "p": "當我有各管道的募款數據時，幫我找出投報率最高的管道並建議資源配置。"}, {"n": "19", "t": "使用者回饋模式分析", "d": "從大量回饋中找出反覆出現的主題和痛點，區分有意義的模式和雜訊。", "occ": "產品經理；UX 研究員", "cat": "專業工作", "diff": "進階", "tw": "台灣的 SaaS 公司或電商平台可從 Google Play 評論、PTT 討論串、客服工單中找出重複出現的使用者痛點。", "p": "當我收集到使用者回饋時，幫我找出重複出現的主題、痛點和有意義的模式。"}, {"n": "20", "t": "建立競品戰術卡", "d": "把敗單和競品情報轉化為即用的戰術卡：勝出話術、異議處理、差異化策略。", "occ": "業務人員；業務主管", "cat": "業務", "diff": "進階", "tw": "台灣 B2B 業務團隊參加 Computex 或醫療器材展前，可用此工具整理競品（如大陸品牌低價競爭）的戰術應對卡。", "p": "當我需要準備競品應對資料時，幫我建立包含話術和異議處理的戰術卡。"}, {"n": "21", "t": "打造個人清單應用", "d": "把你想像中的追蹤器、整理工具或目標系統做成可運作的互動工具。", "occ": "一般用戶；進階用戶", "cat": "個人", "diff": "進階", "tw": "台灣人可用此功能打造個人化工具，例如台灣百岳登山紀錄追蹤器、環島旅行清單、或年度閱讀目標管理。", "p": "當我想把個人目標或清單系統化時，幫我做成一個可互動操作的工具。"}, {"n": "22", "t": "跨工具每日簡報", "d": "從 Slack、Notion、團隊儀表板拉資料，產出每日簡報，呈現優先事項和跨平台關聯。", "occ": "經理人；專案經理", "cat": "專業工作", "diff": "進階", "tw": "台灣企業習慣用 LINE 群組和 Google Workspace 溝通，此工具可從 Slack、Notion、Google Calendar 彙整每日工作摘要。", "p": "當我每天開始工作時，幫我從各個工具拉出今日重點和待辦事項。"}, {"n": "23", "t": "建立募款活動", "d": "產出完整年末募款活動：捐款人分群、email 序列、社群內容、感謝函、影響力儀表板。", "occ": "非營利組織；募款人員", "cat": "非營利組織", "diff": "進階", "tw": "台灣基金會規劃年末勸募活動時，可一次產出捐款人分群策略、email 序列、LINE 推播文案和感謝函範本。", "p": "當我在規劃募款活動時，幫我產出完整的活動素材包：分群策略、信件、社群貼文。"}, {"n": "24", "t": "從瀏覽器圖表和資料夾建立分析", "d": "從散落的董事會簡報和 FRED 即時經濟數據中擷取營收，建立比較圖表。", "occ": "財務人員；分析師；經理人", "cat": "專業工作", "diff": "進階", "tw": "台灣企業主可從經濟部統計處數據、證交所公開資訊和公司內部營收報表中擷取數據，建立跨來源比較分析。", "p": "當我需要整合多個來源的數據做分析時，幫我擷取並建立比較圖表。"}, {"n": "25", "t": "建立客戶人物誌", "d": "從研究資料中合成人口統計、目標、痛點，建立完整的客戶人物誌。", "occ": "行銷人員；產品經理；UX 研究員", "cat": "行銷", "diff": "進階", "tw": "台灣行銷團隊可從 Facebook Audience Insights 和 Google Analytics 台灣數據建立本地客戶人物誌，區分北中南消費者差異。", "p": "當我有客戶研究資料時，幫我建立包含人口統計、目標和痛點的人物誌。"}, {"n": "26", "t": "建立財務模型", "d": "建立完整的投資分析：財務模型、情境規劃、風險評估。", "occ": "財務人員；投資人；創業者", "cat": "財務", "diff": "專業", "tw": "台灣中小企業或新創在向銀行貸款或參加創業比賽（如台大車庫、AppWorks）時，可用此功能建立三年財務預測模型。", "p": "當我需要做投資分析時，幫我建立包含情境規劃和風險評估的財務模型。"}, {"n": "27", "t": "建立互動式圖表工具", "d": "建立互動 ER 圖，呈現資料表關聯、外鍵、Schema 規則。", "occ": "開發者；資料工程師；架構師", "cat": "專業工作", "diff": "進階", "tw": "台灣的工程團隊可用互動 ER 圖呈現資料庫架構，方便在技術會議中與跨部門同事溝通系統設計。", "p": "當我需要視覺化資料庫架構時，幫我建立可互動的 ER 圖。"}, {"n": "28", "t": "清理促銷郵件", "d": "自動掃描收件匣，識別並標記促銷郵件、電子報、自動通知，方便批次刪除。", "occ": "一般用戶", "cat": "Chrome 擴充", "diff": "入門", "tw": "台灣人的 Gmail 常被蝦皮促銷、momo 特惠、PChome 電子報塞滿，此工具可自動標記這些促銷信方便批次清理。", "p": "當我的收件匣太雜時，幫我自動識別和標記可以刪除的促銷郵件。"}, {"n": "29", "t": "比較分析競爭方案", "d": "上傳任意格式的供應商提案，取得標準化比較表：定價、合約條款、功能差異。", "occ": "採購人員；經理人；專案經理", "cat": "專業工作", "diff": "進階", "tw": "台灣企業採購設備或軟體時，可上傳多家供應商報價單（如鼎新、SAP、Oracle），取得標準化比較表。", "p": "當我收到多家供應商的提案時，幫我做成標準化的比較表。"}, {"n": "30", "t": "跨網站產品比較", "d": "讀取多個瀏覽器分頁的產品規格，建立標準化比較表。", "occ": "一般用戶；採購人員", "cat": "Chrome 擴充", "diff": "入門", "tw": "台灣消費者在 PChome、momo、蝦皮之間比價時，此工具可讀取多個分頁的商品規格，建立統一比較表。", "p": "當我在多個網站比較產品時，幫我從各分頁擷取規格做成比較表。"}, {"n": "31", "t": "建立公司電子報", "d": "從各個內部管道彙整公司新聞，產出刊物風格的摘要。", "occ": "行銷人員；內部溝通人員", "cat": "專業工作", "diff": "入門", "tw": "台灣中大型企業可用此工具從各部門的 LINE 群組、email 和 Slack 訊息中彙整週報，產出公司電子報。", "p": "當我需要製作公司電子報時，幫我從各管道彙整新聞並編排成專業格式。"}, {"n": "32", "t": "建立每日旅行行程", "d": "客製化旅行行程，智慧引導，依你的偏好和想要的活動調整。", "occ": "一般用戶", "cat": "個人", "diff": "入門", "tw": "台灣人規劃日本自由行、花東三天兩夜或環島旅行時，可依預算和偏好產出每日行程，含交通方式和景點推薦。", "p": "當我在規劃旅行時，根據我的偏好和天數幫我安排每日行程。"}, {"n": "33", "t": "建立流程圖", "d": "把書面程序轉成視覺流程圖，讓複雜流程更容易理解和分享。", "occ": "專案經理；經理人；一般用戶", "cat": "專業工作", "diff": "入門", "tw": "台灣企業在導入 ISO 流程或優化內部簽核流程時，可把書面 SOP 轉成視覺化流程圖，方便新人理解。", "p": "當我有一段流程描述時，幫我轉成清楚的視覺流程圖。"}, {"n": "34", "t": "建立業務提案簡報", "d": "製作精美的客戶提案簡報：專業版面、數據視覺化、一致的設計。", "occ": "業務人員；業務主管", "cat": "業務", "diff": "進階", "tw": "台灣 B2B 業務在拜訪客戶前，可快速產出專業提案簡報，包含客戶痛點分析、解決方案和報價比較表。", "p": "當我需要為客戶準備提案簡報時，幫我產出專業版面和數據視覺化。"}, {"n": "35", "t": "建立志工管理系統", "d": "產出完整志工管理架構：角色說明、入職流程、溝通範本、追蹤工具。", "occ": "非營利組織；HR", "cat": "非營利組織", "diff": "進階", "tw": "台灣 NPO 管理大量志工時（如慈濟、紅十字會），可用此工具建立志工班表、培訓流程和溝通範本。", "p": "當我需要建立志工管理制度時，幫我產出完整的角色說明、流程和範本。"}, {"n": "36", "t": "製作自訂教材", "d": "把手寫公式和筆記轉成排版好的 LaTeX 文件，不需手動排版。", "occ": "教育工作者；研究人員", "cat": "教育", "diff": "進階", "tw": "台灣的大學教授或補習班講師可把手寫板書、筆記照片轉成排版好的 LaTeX 講義或 PDF 教材。", "p": "當我有手寫筆記或公式時，幫我轉成排版好的 LaTeX 或 PDF 教材。"}, {"n": "37", "t": "製作數位食譜卡", "d": "把手寫家傳食譜轉成數位格式，方便保存和分享。", "occ": "一般用戶", "cat": "個人", "diff": "入門", "tw": "台灣家庭可把阿嬤的手寫食譜（如滷肉飯、紅蟳米糕、辦桌菜）轉成數位食譜卡，保存家族美味記憶。", "p": "當我有手寫食譜或口述食譜時，幫我整理成格式統一的數位食譜卡。"}, {"n": "38", "t": "建立健康與運動筆記", "d": "研究特定需求的運動方式，儲存整理好的訓練計畫到筆記 App。", "occ": "一般用戶", "cat": "個人", "diff": "入門", "tw": "台灣的健身愛好者可針對自己的需求（如路跑訓練、登山體能準備、健身工廠課表）建立個人化訓練計畫。", "p": "當我想開始運動計畫時，幫我研究適合我狀況的運動並整理成訓練計畫。"}, {"n": "39", "t": "建立互動式 PDF 表單", "d": "把靜態 PDF 轉成互動表單：可填欄位、下拉選單、核取方塊、多頁版面。", "occ": "行政人員；專案經理", "cat": "專業工作", "diff": "進階", "tw": "台灣企業的請假單、費用報銷單、客戶訂購單等紙本表格，可轉成互動式 PDF 表單方便線上填寫簽核。", "p": "當我有靜態 PDF 需要變成可填寫的表單時，幫我加入互動元素。"}, {"n": "40", "t": "建立新人入職指南", "d": "把公司標準資訊和新人個人資料結合，產出客製化的歡迎手冊。", "occ": "HR；經理人", "cat": "人力資源", "diff": "入門", "tw": "台灣企業 HR 可結合公司制度（勞健保、特休規定、門禁卡申請）和新人個資，產出客製化的到職手冊。", "p": "當有新人加入時，幫我根據其職位和部門產出客製化的入職指南。"}, {"n": "41", "t": "建立業務報告", "d": "從 CRM 拉指標、分析趨勢，產出附數據視覺化和策略洞察的報告。", "occ": "業務人員；業務主管", "cat": "業務", "diff": "進階", "tw": "台灣業務團隊可從 Salesforce 或 HubSpot 拉出業績數據，產出附趨勢圖和客戶分析的月度業務報告。", "p": "當我需要產出業務報告時，幫我從 CRM 拉數據並分析趨勢。"}, {"n": "42", "t": "辯論練習與回饋", "d": "用互動工具測試你的觀點，你辯護立場，取得即時反駁和回饋。", "occ": "學生；一般用戶", "cat": "個人", "diff": "入門", "tw": "台灣大學生準備辯論比賽或面試時，可用此工具練習論點攻防，取得即時反駁和邏輯漏洞回饋。", "p": "當我想練習論述或測試觀點時，扮演反方挑戰我的論點並給回饋。"}, {"n": "43", "t": "設計在地採集指南", "d": "建立當地野生植物指南：互動地圖、季節採收追蹤、可列印的野外參考。", "occ": "一般用戶", "cat": "個人", "diff": "進階", "tw": "台灣有豐富的野菜文化，可建立在地野生植物指南，標記當季可採集的山蘇、過貓、龍葵等，搭配步道地圖。", "p": "當我想建立當地植物或食材的採集指南時，幫我做成互動式地圖和季節追蹤。"}, {"n": "44", "t": "開發方案工具包", "d": "為新方案產出完整設計框架：邏輯模型、評估計畫、資源指南。", "occ": "非營利組織；專案經理", "cat": "非營利組織", "diff": "專業", "tw": "台灣 NPO 開發新方案（如偏鄉教育、銀髮照護）時，可產出完整設計框架，包含邏輯模型和向政府申請補助的評估計畫。", "p": "當我在設計新的社會方案時，幫我產出邏輯模型、評估計畫和資源指南。"}, {"n": "45", "t": "撰寫投資備忘錄", "d": "從平台數據產出投資備忘錄，格式符合你公司的架構和需求。", "occ": "投資人；財務人員", "cat": "財務", "diff": "專業", "tw": "台灣的創投或天使投資人可從公開資訊觀測站和財報數據產出投資備忘錄，評估台灣新創或上市櫃公司。", "p": "當我需要撰寫投資備忘錄時，幫我從數據源拉資料並按公司格式產出。"}, {"n": "46", "t": "從科學到財報全面評估企業", "d": "同時分析 SEC 申報、臨床試驗數據、專利文件，評估生技公司。", "occ": "投資人；分析師；生技醫藥", "cat": "專業工作", "diff": "專業", "tw": "台灣的生技產業分析師可同時比對 TFDA 審查進度、臨床試驗數據和財務報表，全面評估生技公司價值。", "p": "當我需要全面評估一家生技公司時，幫我同時分析科學數據、財報和專利。"}, {"n": "47", "t": "探索 Claude 能為你做什麼", "d": "根據你的角色和工作文件，個人化引導你發現最相關的 Claude 功能。", "occ": "一般用戶；AI 新手", "cat": "個人", "diff": "入門", "tw": "台灣的上班族、自由工作者或學生，可透過互動引導發現最適合自己角色的 Claude 功能，從日常工作開始用起。", "p": "當我剛開始使用 Claude 時，根據我的工作內容推薦最適合我的功能。"}, {"n": "48", "t": "產出 AI 使用政策", "d": "為組織建立 AI 使用政策：資料隱私、適用場景、員工指引、倫理考量。", "occ": "非營利組織；經理人；HR", "cat": "非營利組織", "diff": "進階", "tw": "台灣企業和學校開始導入 AI 工具時，需要制定 AI 使用規範，此工具可產出符合台灣個資法的 AI 政策文件。", "p": "當我需要為組織制定 AI 使用政策時，幫我產出涵蓋隱私和倫理的完整文件。"}, {"n": "49", "t": "產出專案狀態報告", "d": "從 email、Slack、會議、專案工具拉更新，建立追蹤器顯示誰在做什麼。", "occ": "專案經理；經理人", "cat": "專業工作", "diff": "進階", "tw": "台灣的 PM 可從 LINE 群組、email 和 Jira 中彙整專案進度，產出週報讓主管一目了然誰在做什麼。", "p": "當我需要產出週報月報時，幫我從各工具彙整團隊進度。"}, {"n": "50", "t": "基因體數據分析", "d": "分析基因表現數據，找出模式，形成可驗證的生物機制假說。", "occ": "生技醫藥；研究人員", "cat": "生技醫藥", "diff": "專業", "tw": "台灣的生技研究團隊（如中研院基因體中心、南港生技園區）可用此工具分析基因表現數據，加速假說生成。", "p": "當我有基因表現數據時，幫我分析模式並提出可驗證的假說。"}, {"n": "51", "t": "補助提案組裝線", "d": "模組化內容庫系統，讓非營利組織產出基金會級提案速度提升 60%。", "occ": "非營利組織；募款人員", "cat": "非營利組織", "diff": "進階", "tw": "台灣 NPO 常需寫大量補助提案（如文化部、教育部、衛福部），此工具可建立模組化內容庫，快速組裝不同版本的計畫書。", "p": "當我需要頻繁寫補助提案時，幫我建立可重複使用的模組化內容庫。"}, {"n": "52", "t": "將業務通話記錄到 CRM", "d": "讀取 Google Calendar，比對 Salesforce 聯絡人，為你草擬活動紀錄。", "occ": "業務人員", "cat": "Chrome 擴充", "diff": "入門", "tw": "台灣業務人員可用此功能在 Google Calendar 會議結束後，自動把通話重點記錄到 Salesforce 或 HubSpot CRM。", "p": "當我結束業務通話後，自動幫我在 CRM 建立活動紀錄。"}, {"n": "53", "t": "知識盲點地圖與個人化學習", "d": "追溯困惑的根源：畫出理解地圖、找出具體誤解、建立個人化學習體驗。", "occ": "學生；一般用戶", "cat": "個人", "diff": "進階", "tw": "台灣的自學者或轉職者可用此工具找出知識盲點，例如想轉前端工程師但不確定哪些基礎概念需要補強。", "p": "當我對某個主題感到困惑時，幫我找出理解斷點並建立針對性的學習路徑。"}, {"n": "54", "t": "依內容整理檔案", "d": "讓 Cowork 存取你雜亂的桌面，它讀取檔案、判斷內容、自動分類到資料夾。", "occ": "一般用戶", "cat": "個人", "diff": "入門", "tw": "台灣人的電腦桌面常堆滿截圖、PDF 和文件，此工具可自動讀取檔案內容並分類整理到對應資料夾。", "p": "當我的桌面或資料夾很亂時，幫我依內容自動分類整理。"}, {"n": "55", "t": "整理 Google Drive 檔案", "d": "排序 Drive 檔案、建立資料夾、標記重複檔案讓你確認。", "occ": "一般用戶", "cat": "Chrome 擴充", "diff": "入門", "tw": "台灣企業和學校普遍使用 Google Workspace，此工具可整理雜亂的 Google Drive：建立資料夾結構、標記重複檔案。", "p": "當我的 Google Drive 需要整理時，幫我分類檔案和標記重複。"}, {"n": "56", "t": "整理企業財務", "d": "建立財務試算表：發現趨勢、篩選重點、理解數字背後的意義。", "occ": "創業者；財務人員", "cat": "財務", "diff": "進階", "tw": "台灣中小企業老闆可用此工具整理公司帳目，建立營收趨勢表、費用分類表，不需請會計師就能掌握財務狀況。", "p": "當我需要整理財務狀況時，幫我建立可分析趨勢的試算表。"}, {"n": "57", "t": "用 Projects 組織法律工作流", "d": "上傳 playbook 一次，之後在數百次審閱中自動引用。", "occ": "法律專業", "cat": "法律", "diff": "進階", "tw": "台灣律師事務所可把合約範本、法律意見書模板上傳到 Project，之後審閱類似合約時自動參照。", "p": "當我有法律審閱流程需要標準化時，幫我建立可重複引用的 Project。"}, {"n": "58", "t": "把品牌規範打包成 Skill", "d": "建立簡報、試算表、文件時自動套用品牌風格，做成可重複使用的 Skill。", "occ": "行銷人員；設計師；品牌經理", "cat": "專業工作", "diff": "進階", "tw": "台灣企業可把品牌識別手冊（Logo 使用規範、色碼、字體）做成 Skill，之後產出任何素材都自動套用。", "p": "當我想讓所有輸出自動符合品牌規範時，幫我把品牌指南打包成 Skill。"}, {"n": "59", "t": "把研究流程打包成 Skill", "d": "建立可重複使用的 Skill，自動化月度研究報告：一致的格式、來源、結構。", "occ": "研究人員；分析師", "cat": "專業工作", "diff": "進階", "tw": "台灣的研究團隊可把月度文獻回顧流程做成 Skill，自動化搜尋 PubMed 或 Google Scholar、整理摘要、產出固定格式報告。", "p": "當我有固定的研究報告流程時，幫我打包成可一鍵執行的 Skill。"}, {"n": "60", "t": "規劃職涯路徑", "d": "把你想要的工作對照成職涯計畫：技能缺口、時間表、該聯繫的人、具體下一步。", "occ": "學生；一般用戶；職涯轉換者", "cat": "教育", "diff": "入門", "tw": "台灣的大學生或轉職者可用此工具規劃職涯：對照 104 人力銀行的職缺需求，找出技能缺口和進修方向。", "p": "當我在考慮職涯方向時，幫我分析技能缺口並規劃具體的發展路徑。"}, {"n": "61", "t": "規劃文獻回顧", "d": "以 Claude 為研究助理，找相關研究、決定閱讀優先順序、組織證據。", "occ": "研究人員；學生", "cat": "研究", "diff": "進階", "tw": "台灣碩博士生開始研究時，可用 Claude 搜尋相關文獻、按主題分類、標記重要度，系統化規劃文獻回顧。", "p": "當我開始文獻回顧時，幫我搜尋相關論文、排優先順序並整理證據。"}, {"n": "62", "t": "案例面試練習與回饋", "d": "透過結構化框架練習顧問案例分析，獲得引導和智慧回饋。", "occ": "學生；求職者", "cat": "教育", "diff": "入門", "tw": "台灣的 MBA 學生或管理顧問準備案例面試時，可用此工具練習市場進入、成本分析等結構化思考框架。", "p": "當我在準備顧問公司面試時，幫我練習案例分析並給具體回饋。"}, {"n": "63", "t": "臨床前研究分析", "d": "串接研究平台，彙整跨實驗數據，建立研究報告。", "occ": "生技醫藥；研究人員", "cat": "生技醫藥", "diff": "專業", "tw": "台灣生技公司（如新竹生醫園區的藥廠）可串接實驗室數據平台，彙整跨實驗的臨床前研究報告。", "p": "當我需要彙整多個實驗數據建立研究報告時，幫我串接資料源並分析。"}, {"n": "64", "t": "整理散落文件準備合規稽核", "d": "把散落的政策文件、合約、紀錄整理成稽核就緒的文件集。", "occ": "法律專業；合規人員", "cat": "法律", "diff": "進階", "tw": "台灣企業準備 ISO 稽核或金管會查核時，可用此工具把散落的政策文件、合約和紀錄整理成合規文件集。", "p": "當我需要準備合規稽核時，幫我把散落的文件整理成有組織的文件集。"}, {"n": "65", "t": "從行事曆準備和規劃", "d": "Claude 讀取 Google Calendar 和 Gmail，找出需要準備的會議、標記缺少的資訊。", "occ": "一般用戶；經理人", "cat": "Chrome 擴充", "diff": "入門", "tw": "台灣上班族可讓 Claude 讀取 Google Calendar，在週一早上自動標記本週需要準備簡報或資料的會議。", "p": "每天早上幫我檢查今日會議，標出需要準備的項目和缺少的資訊。"}, {"n": "66", "t": "準備業務談判", "d": "從 CRM 拉相關資料，分析類似成交案例，為即將到來的業務對話做準備。", "occ": "業務人員", "cat": "業務", "diff": "進階", "tw": "台灣 B2B 業務拜訪客戶前，可從 CRM 拉出該客戶的歷史訂單、互動紀錄和類似成交案例，做好拜訪準備。", "p": "當我有重要業務會議前，幫我從 CRM 找類似案例並準備談話策略。"}, {"n": "67", "t": "用 Cowork 批次處理供應商", "d": "一次處理多家供應商：讀供應商檔案、更新追蹤器、產合約、填入職表。", "occ": "採購人員；行政人員", "cat": "專業工作", "diff": "進階", "tw": "台灣企業在評估多家供應商（如 IT 設備、辦公耗材、外包廠商）時，可用 Cowork 批次處理報價比較和合約審查。", "p": "當我需要一次處理多家供應商的入職流程時，幫我批次產出合約和文件。"}, {"n": "68", "t": "從分析儀表板擷取指標", "d": "Claude 操作 Amplitude、Mixpanel 等分析工具，擷取指標並彙整摘要。", "occ": "產品經理；數據分析師；行銷人員", "cat": "專業工作", "diff": "入門", "tw": "台灣的行銷團隊可讓 Claude 從 Google Analytics 4、Facebook 廣告後台和 LINE 官方帳號擷取關鍵指標，彙整成週報。", "p": "當我需要從分析工具拉數據做報告時，幫我自動擷取並彙整。"}, {"n": "69", "t": "快速準備你的一週", "d": "連接行事曆和郵件平台，準備並排出下週的優先順序。", "occ": "經理人；一般用戶", "cat": "專業工作", "diff": "入門", "tw": "台灣上班族可在週日晚上連接 Google Calendar 和 Gmail，讓 Claude 排出下週的優先事項和待辦清單。", "p": "每週一幫我整合行事曆和郵件，列出本週優先事項。"}, {"n": "70", "t": "跨帳戶交易對帳", "d": "把銀行匯出檔和帳本交給 Cowork 比對，標記差異，輸出附註對帳報告。", "occ": "財務人員；會計師", "cat": "財務", "diff": "進階", "tw": "台灣中小企業每月需對帳銀行明細和記帳軟體（如鼎新、會計助手），此工具可自動比對並標記差異項目。", "p": "當我需要對帳時，幫我比對銀行明細和帳本，標記差異。"}, {"n": "71", "t": "研究比較旅遊目的地", "d": "從研究中建立視覺化比較表：圖片、評分、洞察，簡化旅行規劃。", "occ": "一般用戶", "cat": "個人", "diff": "入門", "tw": "台灣人規劃出國旅遊（日本、韓國、東南亞）或國內旅行（墾丁 vs 花東 vs 澎湖）時，可建立視覺化比較表。", "p": "當我在猶豫旅遊目的地時，幫我研究比較各選項並做成視覺化對照表。"}, {"n": "72", "t": "用研究做市場規模估算", "d": "Claude 研究市場、計算 TAM/SAM/SOM，產出 PPT、Excel 和附引用的 Markdown。", "occ": "創業者；投資人；產品經理", "cat": "Cowork", "diff": "專業", "tw": "台灣新創在申請經濟部中小企業處 SBIR 或參加 AppWorks 加速器時，可用此工具研究台灣市場規模，產出 TAM/SAM/SOM 分析。", "p": "當我需要做市場規模估算時，幫我研究並產出 TAM/SAM/SOM 報告。"}, {"n": "73", "t": "從工具彙整洞察做簡報", "d": "綜合散落的數據源建立證據導向簡報，交叉比對矛盾資訊後才建構敘事。", "occ": "經理人；分析師；顧問", "cat": "專業工作", "diff": "專業", "tw": "台灣的主管可從散落的 Google Analytics、CRM 報表和 LINE 官方帳號數據中，彙整成一份有說服力的季度報告簡報。", "p": "當我需要從多個工具彙整數據做簡報時，幫我交叉比對並建立敘事。"}, {"n": "74", "t": "壓力測試你的財務計畫", "d": "在多種情境下分析財務計畫，追蹤風險如何在數十年預測中連鎖反應，產出互動模型。", "occ": "一般用戶；財務人員", "cat": "個人", "diff": "專業", "tw": "台灣人可用此工具壓力測試退休規劃：模擬不同情境如房貸利率上升、通膨加劇、勞保年金改革對長期財務的影響。", "p": "當我想測試退休或財務計畫的韌性時，幫我在多種情境下壓力測試。"}, {"n": "75", "t": "從所有回饋管道浮現主題", "d": "綜合多管道回饋，找出跨平台模式，產出排序過的產品點子。", "occ": "產品經理；UX 研究員", "cat": "研究", "diff": "進階", "tw": "台灣的產品團隊可從 Google Play 評論、PTT 討論、客服信箱和 LINE 客服對話中，綜合分析使用者回饋主題。", "p": "當我有來自多個管道的使用者回饋時，幫我找出跨平台的共同主題。"}, {"n": "76", "t": "用 Claude 送出有心意的禮物", "d": "把臨時抱佛腳變成有心意的禮物：建議品項、搜筆記找線索、在本地找到具體商品。", "occ": "一般用戶", "cat": "個人", "diff": "入門", "tw": "台灣人在過年送禮、中秋送禮或伴手禮選擇時，可讓 Claude 根據對方喜好推薦商品，並搜尋蝦皮或 momo 比價。", "p": "當我需要送禮但沒靈感時，根據對方的喜好幫我推薦具體的禮物選項。"}, {"n": "77", "t": "追蹤 Discovery 時間線與分析模式", "d": "在大量 Discovery 文件中建立時間線、找出文件模式。", "occ": "法律專業", "cat": "法律", "diff": "專業", "tw": "台灣的律師處理大型訴訟案件時，可用此工具從大量書狀和證據中建立時間線，找出文件之間的關聯模式。", "p": "當我在處理 Discovery 文件時，幫我建立時間線並找出關鍵模式。"}, {"n": "78", "t": "把 email 轉成活動追蹤器", "d": "從信件串中擷取日期、地點、行程，建立活動追蹤器。", "occ": "行政人員；專案經理", "cat": "專業工作", "diff": "入門", "tw": "台灣上班族可從信件串中擷取研討會、展覽、客戶拜訪的日期地點，自動建立活動追蹤器同步到 Google Calendar。", "p": "當我有一堆活動相關的 email 時，幫我擷取資訊建立追蹤表。"}, {"n": "79", "t": "把靈感轉成設計計畫", "d": "把靈感轉化成可執行的設計計畫。", "occ": "設計師；一般用戶", "cat": "個人", "diff": "入門", "tw": "台灣的室內設計師或裝潢屋主可把 Pinterest 靈感圖轉成具體的設計計畫，包含材料清單和預算估算。", "p": "當我有設計靈感但不知道怎麼開始時，幫我轉成具體的執行計畫。"}, {"n": "80", "t": "把研究轉成簡報", "d": "用 Claude 找出關鍵主題，把研究發現轉成有說服力的簡報和講者筆記。", "occ": "研究人員；學生；教育工作者", "cat": "教育", "diff": "入門", "tw": "台灣的大學教授或碩博士生可把研究發現轉成學術研討會簡報，自動整理重點和講者筆記。", "p": "當我有研究結果需要報告時，幫我轉成簡報格式和講者筆記。"}, {"n": "81", "t": "把對話串轉成研究筆記", "d": "搜尋訊息中的資訊、研究答案、建立整理好的筆記存到筆記 App。", "occ": "一般用戶", "cat": "個人", "diff": "入門", "tw": "台灣人常在 LINE 群組中討論各種資訊（餐廳推薦、旅遊規劃），此工具可把對話串中的有用資訊整理成筆記。", "p": "當我有一串對話裡提到的待查資訊時，幫我研究並整理成筆記。"}, {"n": "82", "t": "把通勤時間變研究時間", "d": "在手機上用語音記下粗略想法，讓 Claude 在桌機研究你的點子，產出打磨好的成果。", "occ": "研究人員；一般用戶", "cat": "研究", "diff": "進階", "tw": "台灣通勤族在捷運或高鐵上可用手機語音記下想法，讓 Claude 在電腦端深入研究並整理成完整的報告。", "p": "當我在通勤時用語音記了想法，幫我研究並產出整理好的分析。"}, {"n": "83", "t": "理解並擴充接手的試算表", "d": "理解現有公式和結構，然後加入新資料同時保留原始邏輯。", "occ": "財務人員；一般用戶", "cat": "財務", "diff": "進階", "tw": "台灣中小企業接手前任會計留下的 Excel 帳本時，可用此工具理解既有公式和結構，再安全地加入新的記帳欄位。", "p": "當我接手別人的試算表時，幫我理解公式邏輯並安全地擴充。"}, {"n": "84", "t": "從原始數據驗證統計", "d": "學習用原始數據驗證已發表的統計數據。", "occ": "研究人員；學生", "cat": "研究", "diff": "進階", "tw": "台灣的研究生在撰寫論文時，可用此工具從原始數據重新驗證引用論文中的統計結果，確保數據引用正確。", "p": "當我想驗證某篇報告的統計數據是否正確時，幫我用原始數據重新計算。"}, {"n": "85", "t": "視覺化資料庫架構", "d": "從 GitHub repo 建立互動 ER 圖：資料表關聯、外鍵、Schema 規則。", "occ": "開發者；資料工程師", "cat": "專業工作", "diff": "進階", "tw": "台灣的工程團隊可從 GitHub repo 自動產出互動式 ER 圖，方便在技術文件或新人導覽中呈現資料庫架構。", "p": "當我接手一個新的 codebase 時，幫我從 repo 產出資料庫架構的 ER 圖。"}, {"n": "86", "t": "視覺化方案數據", "d": "把方案統計試算表轉成簡報級的圖表、資訊圖和儀表板。", "occ": "非營利組織；專案經理", "cat": "非營利組織", "diff": "入門", "tw": "台灣 NPO 需向董事會或補助機關呈報成果時，可把 Excel 數據轉成專業圖表和資訊圖表，提升報告說服力。", "p": "當我有方案數據需要呈現給利害關係人時，幫我轉成專業的圖表和儀表板。"}, {"n": "87", "t": "工作流程改善規劃", "d": "把流程痛點轉成結構化改善計畫。Claude 幫非營利組織設計挑戰和 AI 解法。", "occ": "非營利組織；經理人", "cat": "非營利組織", "diff": "進階", "tw": "台灣 NPO 的行政流程常仰賴紙本和 LINE 群組，此工具可把流程痛點轉成結構化改善計畫，導入數位工具。", "p": "當我的工作流程有瓶頸時，幫我診斷痛點並設計改善方案。"}, {"n": "88", "t": "撰寫影響力報告", "d": "把方案數據轉成有說服力的影響力報告：數據視覺化、利害關係人敘事、成功案例。", "occ": "非營利組織；募款人員", "cat": "非營利組織", "diff": "進階", "tw": "台灣 NPO 在申請聯合勸募或向企業募款時，需提交影響力報告，此工具可把方案數據轉成有說服力的成果敘事。", "p": "當我需要對外呈現方案成果時，幫我產出附數據視覺化的影響力報告。"}];
+const allCats = ['全部', ...new Set(data.map(d => d.cat))];
+const allDiffs = ['全部', '入門', '進階', '專業'];
+let selCat = '全部', selDiff = '全部';
+
+function buildFilters() {
+  document.getElementById('cat-filters').innerHTML = allCats.map(c =>
+    `<button class="btn${selCat===c?' active-cat':''}" onclick="selCat='${c}';render()">${c}</button>`
+  ).join('');
+  document.getElementById('diff-filters').innerHTML = allDiffs.map(d =>
+    `<button class="btn${selDiff===d?' active-'+d:''}" onclick="selDiff='${d}';render()">${d}</button>`
+  ).join('');
+}
+
+function toggle(id) {
+  const details = document.getElementById('details-'+id);
+  const btn = document.getElementById('toggle-'+id);
+  const isOpen = details.classList.contains('open');
+  details.classList.toggle('open', !isOpen);
+  btn.classList.toggle('open', !isOpen);
+  btn.querySelector('.arrow').textContent = isOpen ? '▾' : '▴';
+  btn.querySelector('.lbl').textContent = isOpen ? '展開詳細資訊' : '收起';
+}
+
+function copyPrompt(id, btn) {
+  const text = document.getElementById('prompt-'+id).textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = '已複製 ✓'; btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = '複製'; btn.classList.remove('copied'); }, 1800);
+  });
+}
+
+function render() {
+  const q = document.getElementById('search').value.toLowerCase();
+  buildFilters();
+  const filtered = data.filter(item => {
+    if (selCat !== '全部' && item.cat !== selCat) return false;
+    if (selDiff !== '全部' && item.diff !== selDiff) return false;
+    if (q && !item.t.toLowerCase().includes(q) && !item.d.toLowerCase().includes(q) && !item.p.toLowerCase().includes(q)) return false;
+    return true;
+  });
+  document.getElementById('count').innerHTML = `顯示 <strong>${filtered.length}</strong> 個案例`;
+  const grid = document.getElementById('grid');
+  if (!filtered.length) { grid.innerHTML = '<div class="empty">沒有符合條件的案例</div>'; return; }
+  grid.innerHTML = filtered.map(item => `
+    <div class="card">
+      <div class="card-body">
+        <div class="card-top">
+          <div class="card-title">${item.t}</div>
+          <div class="card-num">#${item.n}</div>
+        </div>
+        <div class="card-desc">${item.d}</div>
+        <div class="card-footer">
+          <span class="badge badge-cat">${item.cat}</span>
+          <span class="badge badge-${item.diff}">${item.diff}</span>
+        </div>
+      </div>
+      <button class="card-toggle" id="toggle-${item.n}" onclick="toggle('${item.n}')">
+        <span class="arrow">▾</span><span class="lbl">展開詳細資訊</span>
+      </button>
+      <div class="card-details" id="details-${item.n}">
+        <div class="detail-section">
+          <div class="detail-label">提示詞</div>
+          <div class="prompt-block">
+            <div class="prompt-text" id="prompt-${item.n}">${item.p}</div>
+            <button class="copy-btn" onclick="copyPrompt('${item.n}', this)">複製</button>
+          </div>
+        </div>
+        <div class="detail-section">
+          <div class="detail-label">台灣案例</div>
+          <div class="detail-text">${item.tw}</div>
+        </div>
+        <div class="detail-section">
+          <div class="detail-label">適用對象</div>
+          <div class="detail-text">${item.occ}</div>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+render();
+</script>
+</body>
+</html>
